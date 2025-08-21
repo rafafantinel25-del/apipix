@@ -12,8 +12,9 @@ if current_dir not in sys.path:
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Importar do local correto
-from src.models.user import db, User
-from src.models.payment import Payment  # <-- Importar Payment do arquivo correto
+from src.extensions import db
+from src.models.user import User
+from src.models.payment import Payment
 from src.routes.user import user_bp
 from src.routes.pix import pix_bp
 
@@ -64,9 +65,10 @@ if is_production:
 else:
     # --- Ambiente Local ---
     # Cria o caminho para o banco de dados local na pasta 'database'
-    db_path = os.path.join(os.path.dirname(__file__), "database", "app.db")
-    if not os.path.exists(os.path.dirname(db_path)):
-        os.makedirs(os.path.dirname(db_path))
+    db_dir = os.path.join(os.path.dirname(__file__), "database")
+    if not os.path.exists(db_dir):
+        os.makedirs(db_dir)
+    db_path = os.path.join(db_dir, "app.db")
     app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{db_path}"
     app.config["SECRET_KEY"] = os.getenv(
         "SECRET_KEY", "uma_chave_local_de_teste_super_segura"
@@ -87,7 +89,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 # Configurar CORS
 CORS(app)
 # Registrar blueprints
-app.register_blueprint(user_bp, url_prefix="/api")
+app.register_blueprint(user_bp, url_prefix="/api/user")
 app.register_blueprint(pix_bp, url_prefix="/api/pix")
 # Inicializar o banco de dados
 db.init_app(app)
