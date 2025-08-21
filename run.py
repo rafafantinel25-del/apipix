@@ -12,8 +12,14 @@ load_dotenv()
 def create_app():
     app = Flask(__name__)
     
-    # Configurações do banco de dados
-    db_uri = os.getenv('DATABASE_URL', 'sqlite:///database.db')
+    # Configurações do banco de dados com fallback seguro para SQLite
+    db_path = os.path.join(os.getcwd(), 'database')
+    os.makedirs(db_path, exist_ok=True)
+    use_mysql = os.getenv('USE_MYSQL') in ('1', 'true', 'yes', 'on')
+    if use_mysql and os.getenv('DATABASE_URL'):
+        db_uri = os.getenv('DATABASE_URL')
+    else:
+        db_uri = f'sqlite:///{os.path.join(db_path, "app.db")}'
     print(f"Usando banco de dados: {db_uri}")
     
     app.config['SQLALCHEMY_DATABASE_URI'] = db_uri

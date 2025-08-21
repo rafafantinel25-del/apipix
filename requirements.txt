@@ -4,7 +4,6 @@ Flask-SQLAlchemy==3.0.5
 python-dotenv==1.0.0
 requests==2.31.0
 gunicorn==21.2.0
-psycopg2-binary==2.9.9       # Driver para PostgreSQL (Cloud SQL)
 google-cloud-secret-manager==2.16.2 # Para acessar o Secret Manager
 flask-limiter==3.5.0          # Adicionar para rate limiting
 redis==5.0.1                  # Adicionar para cache
