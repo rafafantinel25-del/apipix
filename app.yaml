@@ -1,0 +1,29 @@
+runtime: python39
+instance_class: F2
+service: default
+
+# handlers define como as requisições são roteadas
+handlers:
+- url: /.*
+  script: auto
+  secure: always
+
+# Configuração de variáveis de ambiente (sem segredos!)
+env_variables:
+  FLASK_APP: "main.py"
+  FLASK_ENV: "production"
+  # O DATABASE_URL virá do Secret Manager
+  # As outras chaves secretas também virão de lá
+
+# Configurações de verificação de saúde da aplicação
+health_check:
+  enable_health_check: True
+  check_interval_sec: 10
+  timeout_sec: 4
+  unhealthy_threshold: 2
+  healthy_threshold: 2
+
+# ATENÇÃO: Substitua abaixo pelo NOME_DA_CONEXÃO_DA_INSTÂNCIA do seu Cloud SQL
+# Você obterá esse nome na Fase 2. Ex: SEU_ID_DO_PROJETO:us-central1:sua-instancia
+beta_settings:
+  cloud_sql_instances: "SEU_ID_DO_PROJETO:REGIAO:NOME_DA_INSTANCIA"
